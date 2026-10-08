@@ -1,59 +1,94 @@
 @model IEnumerable<thurston_building.Models.Tenant>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Tenants";
+
+    var searchName = ViewData["SearchName"] as string;
+    var searchEmail = ViewData["SearchEmail"] as string;
+    var searchPhone = ViewData["SearchPhone"] as string;
 }
 
 <h1>Tenants</h1>
 
+<form asp-action="Index" method="get" class="mb-3">
+    <div class="row g-2">
+
+        <div class="col-md-3">
+            <input type="text"
+                   name="searchName"
+                   value="@searchName"
+                   class="form-control"
+                   placeholder="Search first or last name" />
+        </div>
+
+        <div class="col-md-3">
+            <input type="text"
+                   name="searchEmail"
+                   value="@searchEmail"
+                   class="form-control"
+                   placeholder="Search email" />
+        </div>
+
+        <div class="col-md-2">
+            <input type="text"
+                   name="searchPhone"
+                   value="@searchPhone"
+                   class="form-control"
+                   placeholder="Search phone" />
+        </div>
+
+        <div class="col-md-2">
+            <select name="roomId"
+                    class="form-select"
+                    asp-items="ViewBag.RoomId">
+                <option value="">All Rooms</option>
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary">
+                Search
+            </button>
+
+            <a asp-action="Index" class="btn btn-secondary">
+                Reset
+            </a>
+        </div>
+
+    </div>
+</form>
+
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-success">Create New</a>
 </p>
-<table class="table">
+
+<table class="table table-striped">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.FirstName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LastName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PhoneNumber)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Room)
-            </th>
-            <th></th>
+            <th>@Html.DisplayNameFor(model => model.FirstName)</th>
+            <th>@Html.DisplayNameFor(model => model.LastName)</th>
+            <th>@Html.DisplayNameFor(model => model.Email)</th>
+            <th>@Html.DisplayNameFor(model => model.PhoneNumber)</th>
+            <th>@Html.DisplayNameFor(model => model.Room)</th>
+            <th>Actions</th>
         </tr>
     </thead>
+
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PhoneNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Room.RoomNumber)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.FirstName)</td>
+                <td>@Html.DisplayFor(modelItem => item.LastName)</td>
+                <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                <td>@Html.DisplayFor(modelItem => item.PhoneNumber)</td>
+                <td>@Html.DisplayFor(modelItem => item.Room.RoomNumber)</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

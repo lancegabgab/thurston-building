@@ -19,15 +19,56 @@ namespace thurston_building.Controllers
             _context = context;
         }
 
-        // GET: Tenants
-        public async Task<IActionResult> Index()
-        {
-            var thurstonDbContext = _context.Tenants.Include(t => t.Room);
-            return View(await thurstonDbContext.ToListAsync());
-        }
+		public async Task<IActionResult> Index(
+	        string? searchName,
+	        string? searchEmail,
+	        string? searchPhone,
+	        int? roomId)
+		{
+			var tenants = _context.Tenants
+				.Include(t => t.Room)
+				.AsQueryable();
 
-        // GET: Tenants/Details/5
-        public async Task<IActionResult> Details(int? id)
+			if (!string.IsNullOrWhiteSpace(searchName))
+			{
+				tenants = tenants.Where(t =>
+					t.FirstName.Contains(searchName) ||
+					t.LastName.Contains(searchName));
+			}
+
+			if (!string.IsNullOrWhiteSpace(searchEmail))
+			{
+				tenants = tenants.Where(t =>
+					t.Email.Contains(searchEmail));
+			}
+
+			if (!string.IsNullOrWhiteSpace(searchPhone))
+			{
+				tenants = tenants.Where(t =>
+					t.PhoneNumber.Contains(searchPhone));
+			}
+
+			if (roomId.HasValue)
+			{
+				tenants = tenants.Where(t =>
+					t.RoomId == roomId.Value);
+			}
+
+			ViewData["RoomId"] = new SelectList(
+				await _context.Rooms.ToListAsync(),
+				"Id",
+				"RoomNumber",
+				roomId);
+
+			ViewData["SearchName"] = searchName;
+			ViewData["SearchEmail"] = searchEmail;
+			ViewData["SearchPhone"] = searchPhone;
+
+			return View(await tenants.ToListAsync());
+		}
+
+		// GET: Tenants/Details/5
+		public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
