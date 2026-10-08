@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using thurston_building.Models;
 
 namespace thurston_building.Data
 {
@@ -9,5 +10,8 @@ namespace thurston_building.Data
 			: base(options)
 		{
 		}
+
+		public DbSet<Room> Rooms { get; set; }
+		public DbSet<Tenant> Tenants { get; set; }
 	}
 }
